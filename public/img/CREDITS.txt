@@ -1,0 +1,9 @@
+Photos from Unsplash (free under the Unsplash License, https://unsplash.com/license):
+hero: https://unsplash.com/photos/desk-and-chair-by-window-overlooking-mountains-at-sunset-URcajvag5PY
+story: https://unsplash.com/photos/six-colleagues-collaborating-around-a-conference-table-with-laptops-RdEFWm0N84o
+work: https://unsplash.com/photos/man-in-black-long-sleeve-shirt-using-macbook-mXz64B8-3h0
+class: https://unsplash.com/photos/a-man-standing-in-front-of-a-group-of-people-3kc_75Rdgyk
+shop: https://unsplash.com/photos/a-man-smiles-as-he-uses-a-sewing-machine-cU3xxfbB9Es
+connect: https://unsplash.com/photos/person-leaning-on-railing-overlooking-city-9Iso0JagFzg
+wave: https://unsplash.com/photos/a-blue-abstract-background-with-wavy-lines-rMRT4hF-Fsg
+founder: https://yasiraliclasses.in/faculty (Yasir Ali's own published photo)

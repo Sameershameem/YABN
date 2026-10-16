@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  /* warm neutrals */
+  --color-paper: #ffffff;
+  --color-cream: #f7f1e8;
+  --color-sand: #efe5d6;
+  --color-line: #ece6dc;
+  --color-ink: #161412;
+  --color-ink-soft: #5f5a53;
+  /* accents */
+  --color-bronze-300: #d8bc8e;
+  --color-bronze-400: #c6a574;
+  --color-bronze-500: #a88456;
+  --color-bronze-600: #8a6a45;
+  --color-cocoa: #4a3426;
+  --color-cocoa-soft: #5c4232;
+  --color-mist: #93a3bc;
+  --color-navy: #0e2440;
+
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* every animation only touches transform/opacity so phones run them on the GPU */
+  --animate-rise: rise 1s var(--ease-soft) both;
+  --animate-fade: fade 0.35s ease-out both;
+  --animate-settle: settle 2.6s var(--ease-soft) both;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-nudge: nudge 1.8s ease-in-out infinite;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translate3d(0, 24px, 0); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  /* hero photo eases in from a slight zoom */
+  @keyframes settle {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
+  }
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes nudge {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, 4px, 0); }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: var(--color-bronze-300);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-bronze-500);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+}
+
+/* the reference's warm two-tone heading accent */
+@utility text-bronze {
+  background-image: linear-gradient(90deg, #8a6a45 0%, #c6a574 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* frosted glass: real blur only on larger screens, a cheap tint on phones */
+@utility glass {
+  background-color: rgb(255 255 255 / 0.14);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+  @media (width >= 48rem) {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+/* Scroll reveal, driven by one shared IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
+  transition-delay: var(--d, 0ms);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
