@@ -1,4 +1,5 @@
 import Hero from '../components/Hero'
+import SegmentedQueryHub from '../components/SegmentedQueryHub'
 import { Approach, Connect, Founder, Marquee, ProgramsCarousel, Story, Strengths } from '../components/sections'
 import { approach, programPhotos, programs, strengths } from '../data/content'
 
@@ -6,6 +7,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <SegmentedQueryHub />
       <Story
         title="A Business Network Built on Learning and Action"
         text="We help students, new founders and business owners turn ideas into businesses with practical programs, growth consultation and a community that has their back."

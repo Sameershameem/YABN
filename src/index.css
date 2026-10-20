@@ -19,6 +19,7 @@
   --color-navy: #0e2440;
 
   --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, ui-serif, serif;
 
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 

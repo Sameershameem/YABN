@@ -43,9 +43,13 @@ export default function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col gap-8 sm:mt-24 lg:flex-row lg:items-end lg:justify-between">
-          <div className="leading-none">
-            <p className="text-[clamp(3rem,9vw,5.5rem)] font-normal tracking-[0.18em]">YABN</p>
-            <p className="mt-2 text-[10px] tracking-[0.5em] text-white/60">YASIR ALI BUSINESS NETWORK</p>
+          <div className="flex flex-col items-start gap-3">
+            <img
+              src="/img/yabn-logo-white.png"
+              alt="YABN - Yasir Ali Business Network"
+              className="h-14 w-auto object-contain"
+            />
+            <p className="text-[11px] tracking-[0.35em] text-white/60 uppercase font-medium">YASIR ALI BUSINESS NETWORK</p>
           </div>
           <div className="flex flex-col gap-3 text-[13px] text-white/60 sm:flex-row sm:items-center sm:gap-10">
             <p>© {YEAR} All Rights Reserved.</p>

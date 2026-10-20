@@ -3,7 +3,7 @@
 // The very first submission triggers a one-time "Activate form" email to the inbox;
 // after it's clicked, every submission is delivered. FormSubmit then also offers a
 // private alias you can put in VITE_FORM_ENDPOINT so the address isn't in the page source.
-export const INBOX = 'yasirali83637@gmail.com'
+export const INBOX = 'yabnbusiness@gmail.com'
 const ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || `https://formsubmit.co/ajax/${INBOX}`
 
 /**
