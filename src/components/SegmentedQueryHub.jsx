@@ -154,6 +154,8 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
     return () => window.removeEventListener('hashchange', checkHashAndParams)
   }, [])
 
+  const [lastSubmission, setLastSubmission] = useState(null)
+
   const currentCategory = CATEGORIES.find((c) => c.id === activeTab) || CATEGORIES[0]
 
   const handleSubmit = async (e) => {
@@ -171,6 +173,15 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
       ...rawData,
     }
 
+    if (payload.linkedin && !payload.linkedin.startsWith('http')) {
+      payload.linkedin = `https://${payload.linkedin}`
+    }
+    if (payload.resumeLink && !payload.resumeLink.startsWith('http')) {
+      payload.resumeLink = `https://${payload.resumeLink}`
+    }
+
+    setLastSubmission(payload)
+
     try {
       await sendForm(subject, payload)
       setSubmittedData({
@@ -182,7 +193,7 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
       setStatus('sent')
       form.reset()
     } catch (err) {
-      setError(err.message || 'Unable to submit your query. Please try again.')
+      setError(err.message || 'Unable to submit your query. Please check your connection or send directly below.')
       setStatus('idle')
     }
   }
@@ -634,10 +645,10 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                         <FormField label="LinkedIn / Professional Link" required>
                           <input
                             required
-                            type="url"
+                            type="text"
                             name="linkedin"
                             data-label="LinkedIn URL"
-                            placeholder="https://linkedin.com/in/..."
+                            placeholder="linkedin.com/in/... or professional link"
                             className={inputCls}
                           />
                         </FormField>
@@ -753,10 +764,10 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                       <FormField label="Resume / Portfolio / LinkedIn Link" required>
                         <input
                           required
-                          type="url"
+                          type="text"
                           name="resumeLink"
                           data-label="Resume / Portfolio / LinkedIn"
-                          placeholder="https://drive.google.com/... or https://linkedin.com/in/..."
+                          placeholder="drive.google.com/... or linkedin.com/in/... or portfolio URL"
                           className={inputCls}
                         />
                       </FormField>
@@ -790,10 +801,60 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                     </span>
                   </label>
 
-                  {/* Error Notification */}
+                  {/* Error Notification with Instant Fallback Options */}
                   {error && (
-                    <div className="rounded-xl bg-red-50 p-3.5 text-xs text-red-700">
-                      {error}
+                    <div className="rounded-2xl bg-amber-50/90 border border-amber-300 p-4 text-xs text-[#021329] space-y-3">
+                      <div className="flex items-start gap-2 text-amber-950 font-medium">
+                        <span className="text-base leading-none">⚠️</span>
+                        <span className="leading-relaxed">{error}</span>
+                      </div>
+
+                      {lastSubmission && (
+                        <div className="pt-2.5 border-t border-amber-200/80 space-y-2">
+                          <p className="text-[11px] font-bold text-[#021329] uppercase tracking-wider">
+                            Direct Fallback Options (1-Click Send):
+                          </p>
+                          <div className="grid sm:grid-cols-2 gap-2">
+                            <a
+                              href={`https://wa.me/919045417079?text=${encodeURIComponent(
+                                `*YABN ${currentCategory.label} Inquiry*\n\n` +
+                                `• Name: ${lastSubmission.Name || ''}\n` +
+                                `• Mobile: ${lastSubmission['Phone / WhatsApp'] || ''}\n` +
+                                `• Email: ${lastSubmission.Email || ''}\n` +
+                                `• Category: ${currentCategory.label}\n` +
+                                (lastSubmission.domainGroup ? `• Domain: ${lastSubmission.domainGroup}\n` : '') +
+                                (lastSubmission.specialization ? `• Specialization: ${lastSubmission.specialization}\n` : '') +
+                                (lastSubmission.weeklyDays ? `• Respective Days: ${lastSubmission.weeklyDays}\n` : '') +
+                                (lastSubmission.specificDays ? `• Preferred Days: ${lastSubmission.specificDays}\n` : '') +
+                                (lastSubmission.joiningDay ? `• Joining: ${lastSubmission.joiningDay}\n` : '') +
+                                (lastSubmission.resumeLink ? `• Resume: ${lastSubmission.resumeLink}\n` : '') +
+                                `\n• Message:\n${lastSubmission.message || ''}`
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition-colors"
+                            >
+                              <span>Send via WhatsApp (+91 90454 17079)</span>
+                            </a>
+
+                            <a
+                              href={`mailto:${INBOX}?subject=${encodeURIComponent(
+                                `[YABN Query: ${currentCategory.label}] ${lastSubmission.Name || 'Visitor'}`
+                              )}&body=${encodeURIComponent(
+                                `Inquiry Details:\n\n` +
+                                `Category: ${currentCategory.label}\n` +
+                                `Name: ${lastSubmission.Name || ''}\n` +
+                                `Phone / WhatsApp: ${lastSubmission['Phone / WhatsApp'] || ''}\n` +
+                                `Email: ${lastSubmission.Email || ''}\n\n` +
+                                `Message:\n${lastSubmission.message || ''}`
+                              )}`}
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#021329] px-3.5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#B98F32] transition-colors"
+                            >
+                              <span>Send via Email ({INBOX})</span>
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
 

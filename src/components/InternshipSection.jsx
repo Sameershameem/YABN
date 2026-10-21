@@ -195,6 +195,7 @@ export function InternshipModal({ open, onClose, defaultDomain = 'business', def
   const [status, setStatus] = useState('idle') // idle | sending | sent
   const [error, setError] = useState('')
   const [applicantName, setApplicantName] = useState('')
+  const [lastSubmission, setLastSubmission] = useState(null)
   const formRef = useRef(null)
 
   useScrollLock(open)
@@ -216,6 +217,11 @@ export function InternshipModal({ open, onClose, defaultDomain = 'business', def
     setError('')
     setStatus('sending')
 
+    let cleanResume = (rawData.resumeUrl || rawData['Resume / Portfolio Link'] || '').trim()
+    if (cleanResume && !cleanResume.startsWith('http://') && !cleanResume.startsWith('https://')) {
+      cleanResume = `https://${cleanResume}`
+    }
+
     const subject = `[YABN Internship Application] ${rawData.name || 'Applicant'} - ${rawData.domainGroup || domainConfig.label} (${rawData.mobile || rawData.email || ''})`
 
     const payload = {
@@ -231,11 +237,13 @@ export function InternshipModal({ open, onClose, defaultDomain = 'business', def
       'Respective Working Days': rawData.weeklyDays,
       'Specific Preferred Days': rawData.specificDays || 'As per commitment tier',
       'Earliest Joining Day': rawData.joiningDay,
-      'Resume / Portfolio': rawData.resumeUrl,
+      'Resume / Portfolio': cleanResume,
       'Motivation & Objectives': rawData.motivation,
       'Selected Track': defaultTrackTitle || rawData.specialization,
       'Routing Recipient': INBOX,
     }
+
+    setLastSubmission(payload)
 
     try {
       await sendForm(subject, payload)
@@ -243,7 +251,7 @@ export function InternshipModal({ open, onClose, defaultDomain = 'business', def
       setStatus('sent')
       form.reset()
     } catch (err) {
-      setError(err.message || 'Unable to transmit application. Please check your connection and try again.')
+      setError(err.message || 'Unable to transmit application. Please check your connection or send directly below.')
       setStatus('idle')
     }
   }
@@ -544,10 +552,10 @@ export function InternshipModal({ open, onClose, defaultDomain = 'business', def
               </label>
               <input
                 required
-                type="url"
+                type="text"
                 name="resumeUrl"
                 data-label="Resume / Portfolio Link"
-                placeholder="https://drive.google.com/... or https://linkedin.com/in/..."
+                placeholder="drive.google.com/... or linkedin.com/in/... or portfolio URL"
                 className={inputCls}
               />
             </div>
@@ -566,9 +574,71 @@ export function InternshipModal({ open, onClose, defaultDomain = 'business', def
               />
             </div>
 
-            {/* Error Message */}
+            {/* Error Message & Instant Failover Options */}
             {error && (
-              <div className="rounded-xl bg-red-50 p-3 text-xs text-red-700 border border-red-200">{error}</div>
+              <div className="rounded-2xl bg-amber-50/90 border border-amber-300 p-4 text-xs text-[#021329] space-y-3">
+                <div className="flex items-start gap-2 text-amber-950 font-medium">
+                  <span className="text-base leading-none">⚠️</span>
+                  <span className="leading-relaxed">{error}</span>
+                </div>
+
+                {lastSubmission && (
+                  <div className="pt-2.5 border-t border-amber-200/80 space-y-2">
+                    <p className="text-[11px] font-bold text-[#021329] uppercase tracking-wider">
+                      Instant Direct Backup Options (1-Click Send):
+                    </p>
+                    <div className="grid sm:grid-cols-2 gap-2">
+                      <a
+                        href={`https://wa.me/919045417079?text=${encodeURIComponent(
+                          `*YABN Venture Fellowship Application*\n\n` +
+                          `• Name: ${lastSubmission['Applicant Name'] || ''}\n` +
+                          `• Domain: ${lastSubmission['Target Domain'] || ''}\n` +
+                          `• Track: ${lastSubmission['Specific Specialization'] || ''}\n` +
+                          `• WhatsApp: ${lastSubmission['Phone / WhatsApp'] || ''}\n` +
+                          `• Email: ${lastSubmission['Email Address'] || ''}\n` +
+                          `• City: ${lastSubmission['City & State'] || ''}\n` +
+                          `• Degree: ${lastSubmission['Degree & Background'] || ''}\n` +
+                          `• Academic Status: ${lastSubmission['Academic Status'] || ''}\n` +
+                          `• Respective Days: ${lastSubmission['Respective Working Days'] || ''}\n` +
+                          `• Preferred Days: ${lastSubmission['Specific Preferred Days'] || ''}\n` +
+                          `• Earliest Joining: ${lastSubmission['Earliest Joining Day'] || ''}\n` +
+                          `• Resume: ${lastSubmission['Resume / Portfolio'] || ''}\n\n` +
+                          `• Motivation:\n${lastSubmission['Motivation & Objectives'] || ''}`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition-colors"
+                      >
+                        <span>Send via WhatsApp (+91 90454 17079)</span>
+                      </a>
+
+                      <a
+                        href={`mailto:${INBOX}?subject=${encodeURIComponent(
+                          `[YABN Internship Application] ${lastSubmission['Applicant Name'] || 'Applicant'}`
+                        )}&body=${encodeURIComponent(
+                          `YABN Internship Application Details:\n\n` +
+                          `Name: ${lastSubmission['Applicant Name'] || ''}\n` +
+                          `Domain: ${lastSubmission['Target Domain'] || ''}\n` +
+                          `Specialization: ${lastSubmission['Specific Specialization'] || ''}\n` +
+                          `Phone / WhatsApp: ${lastSubmission['Phone / WhatsApp'] || ''}\n` +
+                          `Email: ${lastSubmission['Email Address'] || ''}\n` +
+                          `City & State: ${lastSubmission['City & State'] || ''}\n` +
+                          `Degree & Background: ${lastSubmission['Degree & Background'] || ''}\n` +
+                          `Academic Status: ${lastSubmission['Academic Status'] || ''}\n` +
+                          `Respective Working Days: ${lastSubmission['Respective Working Days'] || ''}\n` +
+                          `Specific Preferred Days: ${lastSubmission['Specific Preferred Days'] || ''}\n` +
+                          `Earliest Joining Day: ${lastSubmission['Earliest Joining Day'] || ''}\n` +
+                          `Resume / Portfolio: ${lastSubmission['Resume / Portfolio'] || ''}\n\n` +
+                          `Motivation & Objectives:\n${lastSubmission['Motivation & Objectives'] || ''}`
+                        )}`}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#021329] px-3.5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#B98F32] transition-colors"
+                      >
+                        <span>Send via Email ({INBOX})</span>
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Submit Button */}
