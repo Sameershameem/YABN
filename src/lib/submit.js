@@ -38,17 +38,25 @@ export async function sendForm(subject, fields) {
 
   const data = await res.json().catch(() => ({}))
   if (!res.ok || String(data.success) !== 'true') {
+    if (data.message && data.message.toLowerCase().includes('activ')) {
+      throw new Error(
+        `Action Required: FormSubmit has sent a 1-click 'Activate Form' confirmation email to ${INBOX}. Please open ${INBOX} (check Inbox, Updates, or Spam folder) and click the 'Activate Form' button. Once clicked, all submissions from this domain will be permanently active.`
+      )
+    }
     throw new Error(data.message || 'Something went wrong while sending. Please try again.')
   }
 }
 
-/* Read a <form> into a label → value object using each field's data-label (or name) */
+/* Read a <form> into a label → value object using each field's data-label and name */
 export function readForm(form) {
   const out = {}
   for (const el of form.elements) {
     if (!el.name || el.type === 'submit') continue
-    const key = el.dataset.label || el.name
-    out[key] = el.type === 'checkbox' ? (el.checked ? 'Yes' : 'No') : el.value.trim()
+    const val = el.type === 'checkbox' ? (el.checked ? 'Yes' : 'No') : el.value.trim()
+    out[el.name] = val
+    if (el.dataset.label) {
+      out[el.dataset.label] = val
+    }
   }
   return out
 }
