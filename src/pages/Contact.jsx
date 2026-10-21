@@ -6,11 +6,11 @@ export default function Contact() {
   return (
     <>
       <PageHero
-        photo="connect"
-        alt="A person overlooking a city at sunset"
-        kicker="Contact"
+        photo="yabn-summit"
+        alt="YABN executive summit and founder networking"
+        kicker="Direct Contact & Consultation"
         title="Let's Connect"
-        text="Enquiries, bookings and support. Every message is answered by the right person."
+        text="Enquiries, advisory bookings, and accelerator applications. Every consultation is answered directly by the leadership team."
       />
       <ContactSection />
       <Faqs items={faqs} />

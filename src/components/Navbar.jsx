@@ -76,6 +76,15 @@ export default function Navbar() {
         if (el) {
           el.scrollIntoView({ behavior: 'smooth' })
         }
+        if (id === 'internships') {
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('open-internship-modal', { detail: { domain: 'business' } }))
+          }, 150)
+        }
+      } else {
+        if (id === 'internships') {
+          sessionStorage.setItem('open_internship_modal', 'true')
+        }
       }
     }
   }

@@ -21,7 +21,7 @@ const actions = [
     tint: 'bg-[#25D366] text-white',
     external: true,
   },
-  { label: 'Call us', href: `tel:${PHONE}`, icon: Phone, tint: 'bg-cream text-cocoa' },
+  { label: 'Call us', href: `tel:${PHONE}`, icon: Phone, tint: 'bg-[#021329] text-[#dcc17b]' },
 ]
 
 /* One quiet floating button that opens WhatsApp and phone options */
@@ -74,7 +74,7 @@ export default function ContactFab() {
         aria-expanded={open}
         aria-controls="contact-fab-menu"
         aria-label={open ? 'Close contact options' : 'Contact us on WhatsApp or phone'}
-        className="relative grid size-12 place-items-center rounded-full bg-ink text-white shadow-[0_12px_30px_-10px_rgba(22,20,18,0.6)] ring-1 ring-white/10 transition-transform duration-200 active:scale-95 sm:size-14"
+        className="relative grid size-12 place-items-center rounded-full bg-gradient-to-tr from-[#B98F32] via-[#cca244] to-[#B98F32] text-[#021329] shadow-[0_12px_30px_-6px_rgba(185,143,50,0.5)] ring-2 ring-white/50 transition-all duration-200 hover:scale-105 active:scale-95 sm:size-14"
       >
         <MessageCircle className={`absolute size-5 transition-[opacity,transform] duration-300 sm:size-6 ${open ? 'scale-50 rotate-45 opacity-0' : 'opacity-100'}`} strokeWidth={1.6} />
         <X className={`absolute size-5 transition-[opacity,transform] duration-300 sm:size-6 ${open ? 'opacity-100' : 'scale-50 -rotate-45 opacity-0'}`} strokeWidth={1.6} />

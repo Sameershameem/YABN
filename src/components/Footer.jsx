@@ -111,6 +111,15 @@ export default function Footer() {
                 <li key={label}>
                   <Link
                     to={to}
+                    onClick={() => {
+                      if (to === '/#internships') {
+                        setTimeout(() => {
+                          window.dispatchEvent(
+                            new CustomEvent('open-internship-modal', { detail: { domain: 'business' } })
+                          )
+                        }, 150)
+                      }
+                    }}
                     className="text-sm text-white/80 hover:text-[#dcc17b] transition-colors"
                   >
                     {label}

@@ -3,7 +3,7 @@ import { Check } from 'lucide-react'
 import { PageHero } from '../components/Hero'
 import { ApplyModal } from '../components/Interactive'
 import { Approach, Connect } from '../components/sections'
-import { Container, Heading, Pill, Reveal } from '../components/ui'
+import { Container, Heading, Kicker, Pill, Reveal } from '../components/ui'
 import { useCountUp, useInView } from '../components/hooks'
 import { missionFeatures, missionRoadmap } from '../data/content'
 
@@ -12,8 +12,10 @@ function Big({ to, label }) {
   const val = useCountUp(to, inView)
   return (
     <div ref={ref}>
-      <p className="text-[clamp(2.6rem,6vw,4rem)] leading-none tracking-[-0.03em] text-cocoa tabular-nums">{val}</p>
-      <p className="mt-3 text-[13px] text-ink-soft">{label}</p>
+      <p className="text-[clamp(2.8rem,6vw,4rem)] font-extrabold leading-none tracking-tight text-[#021329] tabular-nums">
+        {val}
+      </p>
+      <p className="mt-2.5 text-xs sm:text-[13px] font-medium uppercase tracking-wider text-slate-500">{label}</p>
     </div>
   )
 }
@@ -23,47 +25,71 @@ export default function Mission100() {
   return (
     <>
       <PageHero
-        photo="work"
-        alt="An entrepreneur working on a laptop"
-        kicker="Mission 100"
+        photo="yabn-summit"
+        alt="YABN founders celebrating business milestones"
+        kicker="Mission 100 Accelerator"
         title="100 Entrepreneurs in 90 Days"
-        text="A focused program to inspire, train and guide the next generation of founders, from idea to launch."
+        text="An intensive, execution-first deployment program to inspire, train, and guide the next generation of founders from first validation to market scale."
       />
 
-      <section className="bg-paper py-20 sm:py-28">
+      <section className="bg-[#ffffff] py-20 sm:py-28 border-t border-slate-100">
         <Container>
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
             <Reveal>
-              <Heading>One Shared <em>Mission.</em></Heading>
-              <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ink-soft">
-                Students, aspiring founders and early-stage entrepreneurs ready to commit time each week and take consistent action.
+              <Kicker>Cohort Sprint</Kicker>
+              <Heading className="mt-3">
+                One Shared <em>Mission.</em>
+              </Heading>
+              <p className="mt-4 max-w-md text-sm sm:text-base leading-relaxed text-slate-600 font-normal">
+                Students, aspiring founders, and early-stage entrepreneurs ready to commit dedicated hours each week to
+                deploy validated revenue architecture.
               </p>
-              <Pill type="button" onClick={() => setOpen(true)} variant="ink" className="mt-8">Apply to Mission 100</Pill>
+              <Pill type="button" onClick={() => setOpen(true)} variant="gold" className="mt-8">
+                Apply to Mission 100 Cohort
+              </Pill>
             </Reveal>
-            <Reveal delay={100} className="grid grid-cols-3 gap-4 self-end">
-              <Big to={100} label="Entrepreneurs (target)" />
-              <Big to={90} label="Days" />
-              <Big to={3} label="Stages" />
+
+            <Reveal delay={100} className="grid grid-cols-3 gap-6 pt-6 border-t border-slate-200 lg:border-t-0">
+              <Big to={100} label="Entrepreneurs Target" />
+              <Big to={90} label="Days Deployment" />
+              <Big to={3} label="Structured Stages" />
             </Reveal>
           </div>
-          <Reveal delay={150} as="ul" className="mt-16 grid gap-3 sm:grid-cols-2">
+
+          <Reveal delay={150} as="ul" className="mt-16 grid gap-4 sm:grid-cols-2">
             {missionFeatures.map((f) => (
-              <li key={f} className="flex gap-3 rounded-2xl bg-cream p-5 text-[15px]">
-                <Check className="mt-0.5 size-4 shrink-0 text-bronze-500" /> {f}
+              <li
+                key={f}
+                className="flex items-start gap-3 rounded-2xl border border-slate-200/90 bg-[#fafafa] p-5 text-sm sm:text-[15px] text-[#021329] shadow-2xs font-medium"
+              >
+                <div className="size-5 rounded-full bg-[#fcf8ee] border border-[#B98F32]/40 text-[#96711e] flex items-center justify-center shrink-0 mt-0.5">
+                  <Check className="size-3" strokeWidth={2.5} />
+                </div>
+                <span>{f}</span>
               </li>
             ))}
           </Reveal>
-          <p className="mt-6 text-[13px] text-ink-soft">Mission 100 is a target, not a completed achievement. Participation is not a promise of income or funding.</p>
+
+          <p className="mt-8 text-xs text-slate-400">
+            * Mission 100 is an accelerator target and performance framework. Selection is based on grit, founder clarity,
+            and commitment to execution.
+          </p>
         </Container>
       </section>
 
       <Approach
-        title={<>Ninety Days.<br /><em>Three Stages.</em></>}
-        text="A clear roadmap with events and mentorship check-ins along the way."
+        title={
+          <>
+            Ninety Days.
+            <br />
+            <em>Three Execution Stages.</em>
+          </>
+        }
+        text="A transparent milestone roadmap with scheduled diagnostic reviews and weekly mentorship check-ins."
         items={missionRoadmap.map((r) => ({ title: `${r.title} · ${r.phase}`, text: r.text }))}
       />
 
-      <Connect title="Ready to Apply?" />
+      <Connect title="Ready to Scale Your Venture?" />
       {open && <ApplyModal onClose={() => setOpen(false)} />}
     </>
   )

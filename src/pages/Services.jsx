@@ -7,27 +7,32 @@ export default function Services() {
   return (
     <>
       <PageHero
-        photo="class"
-        alt="A trainer presenting to a group of learners"
-        kicker="Our Services"
-        title="Everything You Need to Grow"
-        text="Learning, hands-on growth support and a trusted network, built around where you are today."
+        photo="yabn-workshop"
+        alt="YABN practical business accelerator workshop"
+        kicker="Our Frameworks & Services"
+        title="Everything You Need to Scale"
+        text="Executive learning, hands-on growth advisory, and a trusted founder network built around your exact revenue stage."
       />
       <ProgramsCarousel
-        title="YABN Academy: Six Practical Programs"
-        text="Each program covers outcomes, curriculum, mentor, duration and format. Fees and dates are published once confirmed."
-        cta={{ to: '/contact', label: 'Ask about enrollment' }}
+        title="YABN Academy: Six Tactical Programs"
+        text="Outcome-driven modules covering unit economics, SOPs, sales funnels, and live mentor audits."
+        cta={{ to: '/contact', label: 'Ask About Enrollment' }}
         programs={programs.map((p, i) => ({ ...p, n: i + 1 }))}
         photos={programPhotos}
       />
       <ServiceGrid
         id="growth"
-        title="Business Growth Services"
-        text="Distinct services with a clear scope and a trackable next step."
+        title="Business Growth & Scaling Advisory"
+        text="Distinct growth services with verified scopes, measurable milestone delivery, and direct founder accountability."
         items={services}
       />
       <Assessment />
-      <Strengths id="network" kicker="Business Network" title="A Trusted Community You Control" items={networkBenefits.slice(0, 3).map((b) => `${b.title}: ${b.text}`)} />
+      <Strengths
+        id="network"
+        kicker="Sovereign Founder Network"
+        title="A High-Trust Community of Operators"
+        items={networkBenefits.slice(0, 3).map((b) => `${b.title}: ${b.text}`)}
+      />
       <Connect />
     </>
   )

@@ -64,11 +64,11 @@
     overflow-x: hidden;
   }
   ::selection {
-    background: var(--color-bronze-300);
-    color: var(--color-ink);
+    background: #B98F32;
+    color: #ffffff;
   }
   :focus-visible {
-    outline: 2px solid var(--color-bronze-500);
+    outline: 2px solid #B98F32;
     outline-offset: 3px;
     border-radius: 8px;
   }

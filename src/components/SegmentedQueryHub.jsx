@@ -649,50 +649,106 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                   {activeTab === 'internship' && (
                     <>
                       <div className="grid gap-4 sm:grid-cols-2">
-                        <FormField label="College / University & Degree" required>
-                          <input
-                            required
-                            type="text"
-                            name="collegeDegree"
-                            data-label="College & Degree"
-                            placeholder="e.g. AMU - B.Com / MBA / B.Tech"
-                            className={inputCls}
-                          />
+                        <FormField label="Core Domain of Internship" required>
+                          <select required name="domainGroup" data-label="Core Domain" className={selectCls}>
+                            <option value="">Select Core Domain</option>
+                            <option value="Marketing & Digital Growth">Marketing & Digital Growth</option>
+                            <option value="Business Development & Operations">Business Development & Operations</option>
+                            <option value="Finance, P&L & Cash Flow Systems">Finance, P&L & Cash Flow Systems</option>
+                            <option value="B.E. / Tech, Automation & Analytics">B.E. / Tech, Automation & Analytics</option>
+                          </select>
                         </FormField>
 
-                        <FormField label="Current Academic Status" required>
-                          <select required name="academicYear" data-label="Academic Year" className={selectCls}>
-                            <option value="">Select Status</option>
-                            <option value="1st / 2nd Year Student">1st / 2nd Year Student</option>
-                            <option value="3rd / Final Year Student">3rd / Final Year Student</option>
-                            <option value="Recent Graduate (0-1 Yrs)">Recent Graduate (0-1 Yrs)</option>
-                            <option value="Postgraduate / Master's Student">Postgraduate / Master's Student</option>
-                            <option value="Self-Taught / Aspiring Founder">Self-Taught / Aspiring Founder</option>
+                        <FormField label="Market-Related Specialization" required>
+                          <select required name="specialization" data-label="Specialization" className={selectCls}>
+                            <option value="">Select Specialization</option>
+                            <optgroup label="Marketing Domains">
+                              <option value="Performance Marketing & Paid Ads (Meta, Google, YouTube)">Performance Marketing & Paid Ads (Meta, Google, YouTube)</option>
+                              <option value="Social Media Strategy & Short-Form Content Creation">Social Media Strategy & Short-Form Content Creation</option>
+                              <option value="Brand Positioning, PR & Influencer Growth">Brand Positioning, PR & Influencer Growth</option>
+                              <option value="Growth Hacking, Inbound Funnels & Copywriting">Growth Hacking, Inbound Funnels & Copywriting</option>
+                              <option value="Market Research & Customer Discovery">Market Research & Customer Discovery</option>
+                            </optgroup>
+                            <optgroup label="Business & Operations Domains">
+                              <option value="B2B Business Development & High-Ticket Sales Outreach">B2B Business Development & High-Ticket Sales Outreach</option>
+                              <option value="Operations Engineering, Store Checklists & SOPs">Operations Engineering, Store Checklists & SOPs</option>
+                              <option value="Franchise Network Scaling & Territory Expansion">Franchise Network Scaling & Territory Expansion</option>
+                              <option value="Restaurant & MSME Unit Economics & Margin Optimization">Restaurant & MSME Unit Economics & Margin Optimization</option>
+                              <option value="Client Advisory, Account Management & Consulting">Client Advisory, Account Management & Consulting</option>
+                            </optgroup>
+                            <optgroup label="Finance & Accounts Domains">
+                              <option value="Financial Modeling, 90-Day Forecasting & Valuation">Financial Modeling, 90-Day Forecasting & Valuation</option>
+                              <option value="P&L Architecture & Cash Flow Systems">P&L Architecture & Cash Flow Systems</option>
+                              <option value="Cost Accounting & Unit-Level Food Cost Auditing">Cost Accounting & Unit-Level Food Cost Auditing</option>
+                              <option value="Working Capital Management & Receivables Funnel">Working Capital Management & Receivables Funnel</option>
+                              <option value="Venture Capital Pitch Decks & Financial Due Diligence">Venture Capital Pitch Decks & Financial Due Diligence</option>
+                            </optgroup>
+                            <optgroup label="B.E. & Tech Domains">
+                              <option value="Business Automation, CRM & No-Code Systems">Business Automation, CRM & No-Code Systems</option>
+                              <option value="Full-Stack Web & Landing Page Engineering">Full-Stack Web & Landing Page Engineering</option>
+                              <option value="Data Analytics, BI Dashboards & Scorecards">Data Analytics, BI Dashboards & Scorecards</option>
+                            </optgroup>
                           </select>
                         </FormField>
                       </div>
 
                       <div className="grid gap-4 sm:grid-cols-2">
-                        <FormField label="Preferred Fellowship Track" required>
-                          <select required name="internshipTrack" data-label="Fellowship Track" className={selectCls}>
-                            <option value="">Select Track</option>
-                            <option value="Business Development & Client Growth">Business Development & Client Growth</option>
-                            <option value="Operations & Multi-Outlet SOP Engineering">Operations & Multi-Outlet SOP Engineering</option>
-                            <option value="Growth Marketing & Digital Media">Growth Marketing & Digital Media</option>
-                            <option value="Financial Systems & Unit Economics">Financial Systems & Unit Economics</option>
-                            <option value="Software / Automation & Web Dev">Software / Automation & Web Dev</option>
+                        <FormField label="Degree & Background (e.g. B.E., B.Com, MBA)" required>
+                          <select required name="degreeBackground" data-label="Degree Background" className={selectCls}>
+                            <option value="">Select Degree Stream</option>
+                            <option value="B.E. / B.Tech (Engineering & Tech)">B.E. / B.Tech (Engineering & Tech)</option>
+                            <option value="BBA / MBA (Business & Management)">BBA / MBA (Business & Management)</option>
+                            <option value="B.Com / M.Com (Commerce & Accounts)">B.Com / M.Com (Commerce & Accounts)</option>
+                            <option value="CA / CMA / CS Aspirant">CA / CMA / CS Aspirant</option>
+                            <option value="BA / MA Economics / Finance">BA / MA Economics / Finance</option>
+                            <option value="BCA / MCA / Computer Science">BCA / MCA / Computer Science</option>
+                            <option value="Other Degree / Self-Taught Operator">Other Degree / Self-Taught Operator</option>
                           </select>
                         </FormField>
 
-                        <FormField label="Duration & Availability" required>
-                          <select required name="availability" data-label="Availability" className={selectCls}>
-                            <option value="">Select Duration</option>
-                            <option value="3 Months Full-Time (Onsite / Hybrid)">3 Months Full-Time (Onsite / Hybrid)</option>
-                            <option value="6 Months Immersive Fellowship">6 Months Immersive Fellowship</option>
-                            <option value="Part-Time / Virtual (20 hrs/wk)">Part-Time / Virtual (20 hrs/wk)</option>
+                        <FormField label="Current Academic Status" required>
+                          <select required name="academicStatus" data-label="Academic Status" className={selectCls}>
+                            <option value="">Select Status</option>
+                            <option value="1st / 2nd Year Student">1st / 2nd Year Student</option>
+                            <option value="3rd / Final Year Student">3rd / Final Year Student</option>
+                            <option value="Recent Graduate (0-1 Yrs Exp)">Recent Graduate (0-1 Yrs Exp)</option>
+                            <option value="Postgraduate Student">Postgraduate Student</option>
+                            <option value="Working Professional / Career Switch">Working Professional / Career Switch</option>
                           </select>
                         </FormField>
                       </div>
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <FormField label="Respective Days & Schedule" required>
+                          <select required name="weeklyDays" data-label="Respective Days & Schedule" className={selectCls}>
+                            <option value="">Select Working Days</option>
+                            <option value="6 Days / Week (Full-Time Onsite - Aligarh HQ)">6 Days / Week (Full-Time Onsite - Aligarh HQ)</option>
+                            <option value="5 Days / Week (Full-Time Hybrid)">5 Days / Week (Full-Time Hybrid)</option>
+                            <option value="3–4 Days / Week (Part-Time / Student Schedule)">3–4 Days / Week (Part-Time / Student Schedule)</option>
+                            <option value="Flexible Evening & Weekend Fellowship">Flexible Evening & Weekend Fellowship</option>
+                          </select>
+                        </FormField>
+
+                        <FormField label="Earliest Joining Day" required>
+                          <select required name="joiningDay" data-label="Earliest Joining Day" className={selectCls}>
+                            <option value="">Select Starting Timeline</option>
+                            <option value="Immediate (Within 48 Hours)">Immediate (Within 48 Hours)</option>
+                            <option value="Starting Next Monday">Starting Next Monday</option>
+                            <option value="Within Next 15 Days">Within Next 15 Days</option>
+                            <option value="1st of Next Month">1st of Next Month</option>
+                          </select>
+                        </FormField>
+                      </div>
+
+                      <FormField label="Specific Preferred Days (Optional)">
+                        <input
+                          type="text"
+                          name="specificDays"
+                          data-label="Specific Preferred Days"
+                          placeholder="e.g. Monday to Friday, Mon-Wed-Fri, Weekends only, or All 6 Days"
+                          className={inputCls}
+                        />
+                      </FormField>
 
                       <FormField label="Resume / Portfolio / LinkedIn Link" required>
                         <input
