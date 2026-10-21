@@ -43,7 +43,16 @@ export function SubmitPill({ sending, children, className = '' }) {
   )
 }
 
-const enquiryTypes = ['YABN Academy', 'Business growth consultation', 'Business Network membership', 'Mission 100', 'Mentor / partner', 'Discovery call', 'General enquiry']
+const enquiryTypes = [
+  'YABN Academy',
+  'Business growth consultation',
+  'Business Network membership',
+  'Mission 100',
+  'Internship / Fellowship',
+  'Mentor / partner',
+  'Discovery call',
+  'General enquiry',
+]
 
 export function ContactSection({ id = 'form', title = <>Tell us where <em>you are.</em></>, text = 'Share your goals and the right person from YABN will get back to you.' }) {
   // links elsewhere on the site can preselect a topic and prefill the message (?topic=…&note=…)

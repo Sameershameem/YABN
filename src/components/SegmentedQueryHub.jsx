@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Briefcase,
   UtensilsCrossed,
@@ -11,11 +11,12 @@ import {
   ShieldCheck,
   Clock,
   Sparkles,
+  Award,
 } from 'lucide-react'
 import { sendForm, readForm, INBOX } from '../lib/submit'
 import { Container, Heading, Kicker } from './ui'
 
-const CATEGORIES = [
+export const CATEGORIES = [
   {
     id: 'freelancer',
     label: 'Freelancer',
@@ -86,6 +87,20 @@ const CATEGORIES = [
       'Network with elite founders, educators, and enterprise leaders',
     ],
   },
+  {
+    id: 'internship',
+    label: 'Internship & Fellows',
+    icon: Award,
+    badge: 'Youth & Venture Fellowship',
+    title: 'YABN Venture Fellowship & Internship Program',
+    tagline: 'Practical hands-on incubation, real market operations, and direct mentorship under Yasir Ali.',
+    benefits: [
+      'Hands-on experience in business operations, sales & cash flow systems',
+      'Direct 1-on-1 mentorship sessions with Yasir Ali & industry leaders',
+      'Performance-linked monthly stipend and formal completion credential',
+      'Fast-track Pre-Placement Offers (PPOs) for top-performing fellows',
+    ],
+  },
 ]
 
 const inputCls =
@@ -110,6 +125,34 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
   const [status, setStatus] = useState('idle') // idle | sending | sent
   const [error, setError] = useState('')
   const [submittedData, setSubmittedData] = useState(null)
+
+  useEffect(() => {
+    const checkHashAndParams = () => {
+      const hash = window.location.hash
+      const params = new URLSearchParams(window.location.search)
+      const catParam = params.get('category') || params.get('tab')
+      if (catParam && CATEGORIES.some((c) => c.id === catParam)) {
+        setActiveTab(catParam)
+        return
+      }
+      if (hash.includes('internship')) {
+        setActiveTab('internship')
+      } else if (hash.includes('freelancer')) {
+        setActiveTab('freelancer')
+      } else if (hash.includes('restaurant')) {
+        setActiveTab('restaurant')
+      } else if (hash.includes('academy')) {
+        setActiveTab('academy')
+      } else if (hash.includes('partner')) {
+        setActiveTab('partner')
+      } else if (hash.includes('collaborator')) {
+        setActiveTab('collaborator')
+      }
+    }
+    checkHashAndParams()
+    window.addEventListener('hashchange', checkHashAndParams)
+    return () => window.removeEventListener('hashchange', checkHashAndParams)
+  }, [])
 
   const currentCategory = CATEGORIES.find((c) => c.id === activeTab) || CATEGORIES[0]
 
@@ -599,6 +642,68 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                           />
                         </FormField>
                       </div>
+                    </>
+                  )}
+
+                  {/* 6. INTERNSHIP & FELLOWSHIP SPECIFIC */}
+                  {activeTab === 'internship' && (
+                    <>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <FormField label="College / University & Degree" required>
+                          <input
+                            required
+                            type="text"
+                            name="collegeDegree"
+                            data-label="College & Degree"
+                            placeholder="e.g. AMU - B.Com / MBA / B.Tech"
+                            className={inputCls}
+                          />
+                        </FormField>
+
+                        <FormField label="Current Academic Status" required>
+                          <select required name="academicYear" data-label="Academic Year" className={selectCls}>
+                            <option value="">Select Status</option>
+                            <option value="1st / 2nd Year Student">1st / 2nd Year Student</option>
+                            <option value="3rd / Final Year Student">3rd / Final Year Student</option>
+                            <option value="Recent Graduate (0-1 Yrs)">Recent Graduate (0-1 Yrs)</option>
+                            <option value="Postgraduate / Master's Student">Postgraduate / Master's Student</option>
+                            <option value="Self-Taught / Aspiring Founder">Self-Taught / Aspiring Founder</option>
+                          </select>
+                        </FormField>
+                      </div>
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <FormField label="Preferred Fellowship Track" required>
+                          <select required name="internshipTrack" data-label="Fellowship Track" className={selectCls}>
+                            <option value="">Select Track</option>
+                            <option value="Business Development & Client Growth">Business Development & Client Growth</option>
+                            <option value="Operations & Multi-Outlet SOP Engineering">Operations & Multi-Outlet SOP Engineering</option>
+                            <option value="Growth Marketing & Digital Media">Growth Marketing & Digital Media</option>
+                            <option value="Financial Systems & Unit Economics">Financial Systems & Unit Economics</option>
+                            <option value="Software / Automation & Web Dev">Software / Automation & Web Dev</option>
+                          </select>
+                        </FormField>
+
+                        <FormField label="Duration & Availability" required>
+                          <select required name="availability" data-label="Availability" className={selectCls}>
+                            <option value="">Select Duration</option>
+                            <option value="3 Months Full-Time (Onsite / Hybrid)">3 Months Full-Time (Onsite / Hybrid)</option>
+                            <option value="6 Months Immersive Fellowship">6 Months Immersive Fellowship</option>
+                            <option value="Part-Time / Virtual (20 hrs/wk)">Part-Time / Virtual (20 hrs/wk)</option>
+                          </select>
+                        </FormField>
+                      </div>
+
+                      <FormField label="Resume / Portfolio / LinkedIn Link" required>
+                        <input
+                          required
+                          type="url"
+                          name="resumeLink"
+                          data-label="Resume / Portfolio / LinkedIn"
+                          placeholder="https://drive.google.com/... or https://linkedin.com/in/..."
+                          className={inputCls}
+                        />
+                      </FormField>
                     </>
                   )}
 
