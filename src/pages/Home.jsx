@@ -1,69 +1,34 @@
+import Apply from '../components/Apply'
 import Hero from '../components/Hero'
-import InternshipSection from '../components/InternshipSection'
-import SegmentedQueryHub from '../components/SegmentedQueryHub'
-import {
-  Approach,
-  Connect,
-  Founder,
-  Marquee,
-  ProgramsCarousel,
-  Story,
-  Strengths,
-} from '../components/sections'
-import { approach, programPhotos, programs, strengths } from '../data/content'
+import InternshipPortal from '../components/InternshipSection'
+import { Mentor, Mission, Offer, Paths, WhyUs } from '../components/landing'
 
 export default function Home() {
   return (
     <>
+      {/* One promise, proof and a single clear action */}
       <Hero />
 
-      {/* Story: Philosophy, Boardroom Photo & Growth Engines */}
-      <Story
-        title="A Business Network Built on Learning and Action"
-        text="We help students, new founders, and established MSME owners turn ideas into profitable businesses with practical systems, unit economics audits, and direct 1-on-1 mentorship."
-        link={{ to: '/about', label: 'More About YABN' }}
-      />
+      {/* Navy panel: Academy, Growth and Network as cards that rise in turn */}
+      <Offer />
 
-      {/* Marquee Pillars */}
-      <Marquee />
+      {/* Five paths; each one pre-selects the role in the apply form */}
+      <Paths />
 
-      {/* Venture Fellowship & Internship Section */}
-      <InternshipSection />
+      {/* Navy panel: the numbers, sliding in */}
+      <WhyUs />
 
-      {/* 6-Category Diagnostic Consultation Hub */}
-      <SegmentedQueryHub defaultTab="freelancer" />
+      {/* The 90-day founder program */}
+      <Mission />
 
-      {/* Execution Methodology */}
-      <Approach
-        title={
-          <>
-            Practical. Personal.
-            <br />
-            <em>Built for Founders.</em>
-          </>
-        }
-        text="Our methodology turns business theory into disciplined action, one measurable milestone at a time."
-        cta={{ to: '/about', label: 'Discover our approach' }}
-        items={approach}
-      />
+      {/* Yasir Ali */}
+      <Mentor />
 
-      {/* Programs Carousel */}
-      <ProgramsCarousel
-        title="YABN Academy: Six Tactical Programs"
-        text="Structured courses and sprint modules taking you from raw concept to predictable cash flow systems."
-        cta={{ to: '/services', label: 'Explore All Programs' }}
-        programs={programs.map((p, i) => ({ ...p, n: i + 1 }))}
-        photos={programPhotos}
-      />
+      {/* The one short form everything points to */}
+      <Apply />
 
-      {/* Executive Strengths */}
-      <Strengths title="Key Strengths and Principles" items={strengths} />
-
-      {/* Leadership & Mentor Council */}
-      <Founder />
-
-      {/* Connect Banner */}
-      <Connect />
+      {/* Detailed fellowship form, opened from the navbar, footer and apply form */}
+      <InternshipPortal />
     </>
   )
 }

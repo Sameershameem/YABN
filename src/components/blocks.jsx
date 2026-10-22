@@ -39,8 +39,8 @@ export function FormError({ message }) {
         {INBOX}
       </a>{' '}
       or call{' '}
-      <a className="underline font-bold" href="tel:+919045417079">
-        +91 90454 17079
+      <a className="underline font-bold" href="tel:+918439417079">
+        +91 84394 17079
       </a>
       .
     </p>
@@ -132,15 +132,15 @@ export function ContactSection({
               </a>
 
               <a
-                href="tel:+919045417079"
+                href="tel:+918439417079"
                 className="flex items-center gap-3 p-3.5 rounded-2xl border border-slate-200 bg-[#fafafa] hover:border-[#B98F32] transition-colors"
               >
                 <div className="size-9 rounded-xl bg-[#021329] text-[#dcc17b] flex items-center justify-center shrink-0">
                   <Phone className="size-4" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Advisory Lines</p>
-                  <p className="font-bold text-[#021329]">+91 90454 17079 · +91 94126 17279</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Advisory Line</p>
+                  <p className="font-bold text-[#021329]">+91 84394 17079</p>
                 </div>
               </a>
 

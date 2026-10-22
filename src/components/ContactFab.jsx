@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { MessageCircle, Phone, X } from 'lucide-react'
 
 // Public number from yasiraliclasses.in; change both here if a dedicated YABN line is set up
-const PHONE = '+919045417079'
+const PHONE = '+918439417079'
 const WHATSAPP_TEXT = 'Hi YABN, I would like to know more about your programs.'
 
 function WhatsAppIcon({ className = '' }) {

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { ArrowRight, ChevronRight, Menu, Sparkles, User, X } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Menu, X } from 'lucide-react'
 import { useScrollLock } from './hooks'
 
 const navItems = [
@@ -13,37 +13,16 @@ const navItems = [
 
 export function Wordmark({ className = '' }) {
   return (
-    <Link
-      to="/"
-      aria-label="YABN home"
-      className={`group flex items-center gap-3 transition-transform duration-200 hover:scale-[1.02] ${className}`}
-    >
-      <img
-        src="/img/yabn-logo-white.png"
-        alt="YABN Logo"
-        className="h-9 sm:h-10 w-auto object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
-        onError={(e) => {
-          e.currentTarget.onerror = null
-          e.currentTarget.src = '/img/yabn-logo-trans.png'
-        }}
-      />
-      <div className="flex flex-col leading-none">
-        <div className="flex items-center gap-1.5">
-          <span className="text-[17px] font-black tracking-[0.22em] text-white">YABN</span>
-          <span className="text-[10px] text-[#B98F32]">•</span>
-          <span className="text-[11px] font-semibold tracking-wider text-slate-300">YASIR ALI</span>
-        </div>
-        <span className="mt-1 text-[7.5px] font-bold tracking-[0.32em] text-[#dcc17b] uppercase">
-          Business Network
-        </span>
-      </div>
+    <Link to="/" aria-label="YABN home" className={`flex shrink-0 items-center ${className}`}>
+      <img src="/img/yabn-logo-160.webp" alt="YABN, Yasir Ali Business Network" width="70" height="40" className="h-9 w-auto sm:h-10" />
     </Link>
   )
 }
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const lastY = useRef(0)
   const { pathname, hash } = useLocation()
   useScrollLock(open)
 
@@ -53,12 +32,18 @@ export default function Navbar() {
     setOpen(false)
   }
 
+  // tuck the bar away while reading down the page, bring it back on any scroll up
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+    const onScroll = () => {
+      const y = window.scrollY
+      const delta = y - lastY.current
+      if (Math.abs(delta) > 6) {
+        setHidden(delta > 0 && y > 160)
+        lastY.current = y
+      }
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
@@ -89,184 +74,135 @@ export default function Navbar() {
     }
   }
 
+  const linkCls = (active) =>
+    `relative block rounded-full px-3.5 py-1.5 text-[13px] transition-colors duration-200 ${
+      active ? 'text-[#021329]' : 'text-slate-600 hover:text-[#021329]'
+    }`
+  const dot = (active) => (
+    <span
+      className={`absolute bottom-0 left-1/2 size-1 -translate-x-1/2 rounded-full bg-[#B98F32] transition-opacity ${active ? 'opacity-100' : 'opacity-0'}`}
+    />
+  )
+
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-[#021329]/95 py-3 shadow-xl shadow-[#021329]/25 border-b border-white/10 backdrop-blur-md'
-          : 'bg-[#021329] py-3.5 sm:py-4 border-b border-white/10 backdrop-blur-sm'
+      className={`fixed inset-x-0 top-0 z-50 px-3 pt-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-5 sm:pt-4 ${
+        hidden && !open ? '-translate-y-[130%]' : 'translate-y-0'
       }`}
     >
-      {/* Top subtle gold accent hairline */}
-      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[#B98F32]/80 to-transparent pointer-events-none" />
-
       <nav
         aria-label="Main"
-        className="mx-auto flex max-w-[1320px] items-center justify-between px-5 sm:px-8"
+        className="mx-auto flex max-w-[1320px] items-center justify-between rounded-full bg-white/90 py-2 pr-2 pl-4 shadow-[0_10px_30px_-18px_rgba(2,19,41,0.35)] ring-1 ring-slate-200/80 sm:pl-5 md:backdrop-blur-md"
       >
-        {/* Brand / Logo */}
         <Wordmark />
 
-        {/* Center Nav Links - Navy Capsule */}
-        <ul className="hidden items-center gap-1 rounded-full bg-white/5 p-1.5 ring-1 ring-white/10 backdrop-blur-sm md:flex">
+        <ul className="hidden items-center md:flex">
           {navItems.map((item) => {
-            const isInternship = item.to === '/#internships'
-            const isInternshipActive = isInternship && pathname === '/' && hash === '#internships'
-
+            if (item.to === '/#internships') {
+              const active = pathname === '/' && hash === '#internships'
+              return (
+                <li key={item.to}>
+                  <Link to={item.to} onClick={() => handleNavClick(item.to)} className={linkCls(active)}>
+                    {item.label}
+                    <sup className="ml-0.5 font-mono text-[9px] text-[#B98F32]">new</sup>
+                    {dot(active)}
+                  </Link>
+                </li>
+              )
+            }
             return (
               <li key={item.to}>
-                {isInternship ? (
-                  <Link
-                    to={item.to}
-                    onClick={() => handleNavClick(item.to)}
-                    className={`block rounded-full px-4 py-1.5 text-[13px] font-medium transition-all duration-200 ${
-                      isInternshipActive
-                        ? 'bg-gradient-to-r from-[#B98F32] to-[#cca244] text-[#021329] font-bold shadow-xs'
-                        : 'text-slate-300 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    <span className="flex items-center gap-1.5">
-                      <span>{item.label}</span>
-                      <span className="inline-block size-1.5 rounded-full bg-[#B98F32] animate-pulse" />
-                    </span>
-                  </Link>
-                ) : (
-                  <NavLink
-                    to={item.to}
-                    end
-                    className={({ isActive }) =>
-                      `block rounded-full px-4 py-1.5 text-[13px] font-medium transition-all duration-200 ${
-                        isActive && (!hash || hash === '')
-                          ? 'bg-gradient-to-r from-[#B98F32] to-[#cca244] text-[#021329] font-bold shadow-xs'
-                          : 'text-slate-300 hover:text-white hover:bg-white/10'
-                      }`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                )}
+                <NavLink to={item.to} end className={({ isActive }) => linkCls(isActive && !hash)}>
+                  {({ isActive }) => (
+                    <>
+                      {item.label}
+                      {dot(isActive && !hash)}
+                    </>
+                  )}
+                </NavLink>
               </li>
             )
           })}
         </ul>
 
-        {/* Right CTA Actions */}
-        <div className="hidden items-center gap-4 md:flex">
-          {/* Assessment Link */}
+        <div className="hidden items-center gap-2 md:flex">
           <Link
             to="/services#assessment"
-            className="text-[12px] font-bold tracking-wider uppercase text-slate-300 transition-colors hover:text-[#dcc17b]"
+            className="rounded-full px-3 py-2 text-[14px] text-slate-600 transition-colors hover:text-[#96711e]"
           >
-            Growth Test
+            Growth test
           </Link>
-
-          {/* Primary Action Button (Gold Luxury Pill) */}
           <Link
-            to="/contact"
-            className="group inline-flex min-h-10 items-center gap-2 rounded-full bg-gradient-to-r from-[#B98F32] via-[#cca244] to-[#B98F32] px-5 py-2 text-[12px] font-bold tracking-wider uppercase text-[#021329] shadow-md shadow-[#B98F32]/25 transition-all duration-200 hover:brightness-110 active:scale-95"
+            to="/#apply"
+            className="group inline-flex items-center gap-2 rounded-full bg-[#021329] px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-[#0b2a52]"
           >
-            <span>Get in Touch</span>
-            <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-
-          {/* Profile / Account Icon */}
-          <Link
-            to="/contact?topic=Discovery+call#form"
-            aria-label="User portal & consultation"
-            className="flex size-9 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition-all hover:bg-white/20 active:scale-95"
-          >
-            <User className="size-4" />
+            Apply now
+            <ArrowRight className="size-3.5 text-[#dcc17b] transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
 
-        {/* Mobile Hamburger Toggle Button */}
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
           aria-controls="mobile-menu"
-          className="inline-flex size-10 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition-colors hover:bg-white/20 md:hidden"
+          className="inline-flex size-10 items-center justify-center rounded-full bg-[#021329] text-white transition-colors md:hidden"
         >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          {open ? <X className="size-4.5" /> : <Menu className="size-4.5" />}
         </button>
       </nav>
 
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile menu */}
       <div
         id="mobile-menu"
-        className={`fixed inset-x-4 top-[72px] rounded-3xl bg-[#021329]/98 p-6 shadow-2xl ring-1 ring-white/15 backdrop-blur-2xl transition-all duration-300 md:hidden ${
-          open
-            ? 'visible translate-y-0 opacity-100 pointer-events-auto'
-            : 'invisible -translate-y-3 opacity-0 pointer-events-none'
+        className={`fixed inset-x-3 top-[76px] rounded-[24px] bg-white p-3 shadow-[0_30px_60px_-20px_rgba(2,19,41,0.35)] ring-1 ring-slate-200 transition-[opacity,translate] duration-300 md:hidden ${
+          open ? 'visible translate-y-0 opacity-100' : 'pointer-events-none invisible -translate-y-3 opacity-0'
         }`}
       >
-        <div className="flex items-center justify-between pb-3 border-b border-white/10">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#dcc17b]">
-            Navigation Menu
-          </span>
-          <span className="text-[11px] text-slate-400">YABN Executive Portal</span>
-        </div>
-
-        <ul className="mt-3 space-y-1">
-          {navItems.map((item) => {
+        <ul>
+          {navItems.map((item, i) => {
             const isInternship = item.to === '/#internships'
+            const row = (active) =>
+              `flex items-center gap-4 border-b border-slate-100 px-3 py-4 text-[17px] tracking-tight transition-colors ${
+                active ? 'text-[#021329]' : 'text-slate-600'
+              }`
+            const inner = (
+              <>
+                <span className="label-mono w-5 text-slate-400">0{i + 1}</span>
+                <span className="flex-1">{item.label}</span>
+                <ArrowUpRight className="size-4 text-slate-300" />
+              </>
+            )
             return (
               <li key={item.to}>
                 {isInternship ? (
-                  <Link
-                    to={item.to}
-                    onClick={() => handleNavClick(item.to)}
-                    className="flex items-center justify-between rounded-xl px-4 py-3 text-[14px] font-medium text-white/90 transition-colors hover:bg-white/10"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span>{item.label}</span>
-                      <span className="rounded-full bg-[#B98F32]/20 px-2 py-0.5 text-[10px] font-bold text-[#dcc17b]">
-                        New
-                      </span>
-                    </span>
-                    <ChevronRight className="size-4 text-[#dcc17b]" />
+                  <Link to={item.to} onClick={() => handleNavClick(item.to)} className={row(false)}>
+                    {inner}
                   </Link>
                 ) : (
-                  <NavLink
-                    to={item.to}
-                    end
-                    onClick={() => setOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center justify-between rounded-xl px-4 py-3 text-[14px] font-medium transition-colors ${
-                        isActive
-                          ? 'bg-[#B98F32] text-[#021329] font-bold'
-                          : 'text-white/90 hover:bg-white/10'
-                      }`
-                    }
-                  >
-                    <span>{item.label}</span>
-                    <ChevronRight className="size-4 opacity-70" />
+                  <NavLink to={item.to} end onClick={() => setOpen(false)} className={({ isActive }) => row(isActive)}>
+                    {inner}
                   </NavLink>
                 )}
               </li>
             )
           })}
         </ul>
-
-        {/* Mobile Quick Action Buttons */}
-        <div className="mt-5 pt-4 border-t border-white/10 flex flex-col gap-2.5">
+        <div className="grid grid-cols-2 gap-2 p-2 pt-4">
           <Link
-            to="/#internships"
-            onClick={() => handleNavClick('/#internships')}
-            className="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 text-center text-xs font-semibold uppercase tracking-wider text-[#dcc17b] ring-1 ring-white/15 hover:bg-white/15"
-          >
-            <Sparkles className="size-3.5 text-[#B98F32]" />
-            <span>Apply for Venture Fellowship</span>
-          </Link>
-
-          <Link
-            to="/contact"
+            to="/services#assessment"
             onClick={() => setOpen(false)}
-            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#B98F32] to-[#cca244] py-3 text-center text-xs font-bold uppercase tracking-wider text-[#021329] shadow-md hover:brightness-110"
+            className="rounded-xl bg-[#f5ecd7] py-3 text-center text-[14px] font-medium text-[#7a5a14]"
           >
-            <span>Get in Touch</span>
-            <ArrowRight className="size-4" />
+            Growth test
+          </Link>
+          <Link
+            to="/#apply"
+            onClick={() => setOpen(false)}
+            className="rounded-xl bg-[#021329] py-3 text-center text-[14px] font-medium text-white"
+          >
+            Apply now
           </Link>
         </div>
       </div>

@@ -14,7 +14,7 @@ import {
   Award,
 } from 'lucide-react'
 import { sendForm, readForm, INBOX } from '../lib/submit'
-import { Container, Heading, Kicker } from './ui'
+import { Container, SectionHead } from './ui'
 
 export const CATEGORIES = [
   {
@@ -199,21 +199,16 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
   }
 
   return (
-    <section id="inquiry-hub" className="bg-[#f8fafc] py-20 sm:py-28 border-t border-slate-200/80 scroll-mt-24">
+    <section id="inquiry-hub" className="scroll-mt-24 bg-white pb-20 sm:pb-28">
       <Container>
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto">
-          <Kicker>Dedicated Consultation & Query Portals</Kicker>
-          <Heading className="mt-3">
-            Tailored Consultation for <em>Your Business</em>
-          </Heading>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-            Select your category below to access a specialized diagnostic form. Every inquiry is reviewed directly by Yasir Ali and the YABN leadership team.
-          </p>
-        </div>
+        <SectionHead
+          n={6}
+          title="Tell us where you [are]"
+          aside="Choose your category for a focused diagnostic form. Every inquiry is read by Yasir Ali and the YABN team."
+        />
 
-        {/* 5-Category Interactive Switcher Bar */}
-        <div className="mt-12 flex flex-wrap justify-center gap-2 sm:gap-3">
+        {/* Category switcher */}
+        <div className="no-scrollbar mt-12 -mx-5 flex gap-1 overflow-x-auto border-y border-slate-200 px-5 sm:mx-0 sm:px-0">
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon
             const isSelected = activeTab === cat.id
@@ -226,21 +221,25 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                   setError('')
                   if (status === 'sent') setStatus('idle')
                 }}
-                className={`inline-flex items-center gap-2.5 rounded-full px-5 py-3 text-xs sm:text-sm font-bold tracking-tight transition-all duration-200 active:scale-95 ${
-                  isSelected
-                    ? 'bg-[#021329] text-white shadow-lg shadow-[#021329]/20 ring-2 ring-[#B98F32]'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:border-[#B98F32] hover:text-[#021329]'
+                aria-pressed={isSelected}
+                className={`relative inline-flex shrink-0 items-center gap-2 px-4 py-4 text-[13px] font-medium whitespace-nowrap transition-colors ${
+                  isSelected ? 'text-[#021329]' : 'text-slate-400 hover:text-[#021329]'
                 }`}
               >
-                <Icon className={`size-4 ${isSelected ? 'text-[#dcc17b]' : 'text-[#B98F32]'}`} />
+                <Icon className={`size-4 ${isSelected ? 'text-[#B98F32]' : 'text-slate-300'}`} strokeWidth={1.75} />
                 <span>{cat.label}</span>
+                <span
+                  className={`absolute inset-x-3 -bottom-px h-0.5 origin-left bg-[#021329] transition-transform duration-300 ${
+                    isSelected ? 'scale-x-100' : 'scale-x-0'
+                  }`}
+                />
               </button>
             )
           })}
         </div>
 
         {/* Main Form & Context Grid */}
-        <div className="mt-10 max-w-5xl mx-auto rounded-3xl border border-slate-200 bg-white shadow-xl overflow-hidden">
+        <div className="mt-8 overflow-hidden rounded-[24px] border border-slate-200 bg-white">
           <div className="grid lg:grid-cols-[1.1fr_1.4fr]">
             
             {/* Left Context Column: What YABN Provides for This Specific Audience */}
@@ -253,7 +252,7 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                   <span>{currentCategory.badge}</span>
                 </div>
 
-                <h3 className="mt-5 text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+                <h3 className="mt-5 text-2xl sm:text-3xl font-medium tracking-tight text-white leading-tight">
                   {currentCategory.title}
                 </h3>
 
@@ -816,7 +815,7 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                           </p>
                           <div className="grid sm:grid-cols-2 gap-2">
                             <a
-                              href={`https://wa.me/919045417079?text=${encodeURIComponent(
+                              href={`https://wa.me/918439417079?text=${encodeURIComponent(
                                 `*YABN ${currentCategory.label} Inquiry*\n\n` +
                                 `• Name: ${lastSubmission.Name || ''}\n` +
                                 `• Mobile: ${lastSubmission['Phone / WhatsApp'] || ''}\n` +
@@ -834,7 +833,7 @@ export default function SegmentedQueryHub({ defaultTab = 'freelancer' }) {
                               rel="noopener noreferrer"
                               className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition-colors"
                             >
-                              <span>Send via WhatsApp (+91 90454 17079)</span>
+                              <span>Send via WhatsApp (+91 84394 17079)</span>
                             </a>
 
                             <a

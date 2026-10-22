@@ -19,6 +19,8 @@
   --color-navy: #0e2440;
 
   --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -49,6 +51,32 @@
   @keyframes nudge {
     0%, 100% { transform: translate3d(0, 0, 0); }
     50% { transform: translate3d(0, 4px, 0); }
+  }
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-tile: tile 1.4s var(--ease-soft) both;
+  --animate-scrollcue: scrollcue 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  --animate-spin-slow: spin 48s linear infinite;
+  --animate-lineup: lineup 1.1s var(--ease-soft) both;
+
+  @keyframes lineup {
+    from { transform: translate3d(0, 105%, 0); }
+    to { transform: none; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -10px, 0); }
+  }
+  /* floating hero tiles drop in from a slight zoom and tilt */
+  @keyframes tile {
+    from { opacity: 0; transform: translate3d(0, 40px, 0) scale(0.86) rotate(var(--tilt-from, 0deg)); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes scrollcue {
+    0% { transform: scaleY(0); transform-origin: top; }
+    45% { transform: scaleY(1); transform-origin: top; }
+    55% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
   }
 }
 
@@ -109,9 +137,52 @@
   transform: none;
 }
 
+/* Reveal variants: cards rise from lower down, stat tiles slide in from the right */
+.reveal.from-low { transform: translate3d(0, 90px, 0); transition-duration: 1.1s; }
+.reveal.from-right { transform: translate3d(80px, 0, 0); transition-duration: 1s; }
+.reveal.is-in.from-low, .reveal.is-in.from-right { transform: none; }
+
+/* Hairline under section titles that draws itself in, with a small notch, like the reference */
+.notch-line path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.6s var(--ease-soft) 0.25s;
+}
+.notch-line.is-in path { stroke-dashoffset: 0; }
+
+/* Type-in text: each character fades from a pale ghost to full ink, one after another */
+.type-char {
+  opacity: 0.14;
+  transition: opacity 0.45s ease;
+  transition-delay: calc(var(--i) * var(--step, 22ms) + var(--d, 0ms));
+}
+.is-typed .type-char { opacity: 1; }
+
+/* Headline lines slide up from behind a mask */
+.line-mask { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.line-mask > span {
+  display: block;
+  transform: translate3d(0, 105%, 0);
+  transition: transform 1.1s var(--ease-soft);
+  transition-delay: var(--d, 0ms);
+}
+.is-in .line-mask > span, .line-mask.is-in > span { transform: none; }
+
+/* Monospace micro labels used across the landing page */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; }
+  .type-char { opacity: 1; }
+  .reveal.from-low, .reveal.from-right { transform: none; }
+  .notch-line path { stroke-dashoffset: 0; }
+  .line-mask > span { transform: none; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;

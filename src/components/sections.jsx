@@ -1,17 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  CheckCircle2,
-  GraduationCap,
-  Handshake,
-  Sparkles,
-  Target,
-  TrendingUp,
-} from 'lucide-react'
-import { Link } from 'react-router-dom'
-import { founder } from '../data/content'
+import { ArrowLeft, ArrowRight, Target } from 'lucide-react'
 import { useCountUp, useInView } from './hooks'
 import { Container, Heading, Kicker, Photo, Pill, Reveal, UnderLink } from './ui'
 
@@ -92,38 +80,6 @@ export function Story({ id = 'story', title, text, link }) {
         </div>
       </Container>
     </section>
-  )
-}
-
-/* ---------- Marquee of YABN pillars ---------- */
-const pillars = [
-  [GraduationCap, 'YABN Academy'],
-  [TrendingUp, 'Business Growth'],
-  [Handshake, 'Business Network'],
-  [Target, 'Mission 100'],
-  [BookOpen, 'Growth Book'],
-  [Sparkles, 'Har Ghar Se Ek Entrepreneur'],
-]
-
-export function Marquee() {
-  return (
-    <div
-      className="overflow-hidden border-y border-slate-200/80 bg-[#ffffff] py-6 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]"
-      aria-hidden="true"
-    >
-      <div className="flex w-max animate-marquee gap-14 pr-14">
-        {[...pillars, ...pillars].map(([Icon, label], i) => (
-          <span
-            key={i}
-            className="flex items-center gap-3 text-base sm:text-lg font-bold tracking-tight whitespace-nowrap text-[#021329]/80 transition-colors hover:text-[#021329]"
-          >
-            <Icon className="size-5 text-[#96711e]" strokeWidth={1.8} />
-            <span>{label}</span>
-            <span className="text-slate-300 ml-4 font-light">•</span>
-          </span>
-        ))}
-      </div>
-    </div>
   )
 }
 
@@ -379,104 +335,6 @@ export function Strengths({ id, kicker = 'Why YABN', title, items }) {
           </div>
         </Container>
       </div>
-    </section>
-  )
-}
-
-/* ---------- Founder card ---------- */
-export function Founder() {
-  return (
-    <section className="bg-[#fafafa] py-20 sm:py-28 border-t border-slate-100">
-      <Container>
-        <Reveal className="text-center max-w-xl mx-auto">
-          <Kicker>Executive Leadership</Kicker>
-          <Heading className="mt-3">Mentorship from Real Operators</Heading>
-        </Reveal>
-
-        <div className="mx-auto mt-14 grid max-w-5xl gap-6 md:grid-cols-2">
-          {/* Yasir Ali Card */}
-          <Reveal className="h-full">
-            <article className="h-full rounded-3xl border border-slate-200/90 bg-white p-7 sm:p-8 shadow-md flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-5">
-                  <img
-                    src="/img/founder-800.webp"
-                    alt="Yasir Ali, founder of YABN"
-                    width="88"
-                    height="88"
-                    loading="lazy"
-                    decoding="async"
-                    className="size-22 shrink-0 rounded-2xl bg-slate-100 object-cover object-top border border-slate-200"
-                  />
-                  <div>
-                    <h3 className="text-2xl font-extrabold text-[#021329]">{founder.name}</h3>
-                    <p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#96711e]">
-                      Founder, YABN &amp; Yasir Ali Classes
-                    </p>
-                    <p className="mt-2.5 border-l-2 border-[#B98F32] pl-3 text-xs sm:text-[13px] font-medium text-slate-700 italic font-serif">
-                      &ldquo;{founder.motto}&rdquo;
-                    </p>
-                  </div>
-                </div>
-
-                <ul className="mt-6 space-y-2.5 text-xs sm:text-sm leading-relaxed text-slate-600">
-                  {founder.highlights.map((h) => (
-                    <li key={h} className="flex items-start gap-2">
-                      <CheckCircle2 className="size-4 shrink-0 text-[#96711e] mt-0.5" />
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between">
-                <Link
-                  to="/about#founder"
-                  className="text-xs font-bold uppercase tracking-wider text-[#021329] hover:text-[#96711e] transition-colors"
-                >
-                  Read His Full Journey →
-                </Link>
-                <span className="text-xs font-mono text-slate-400">80K+ Mentored</span>
-              </div>
-            </article>
-          </Reveal>
-
-          {/* Become a Mentor / Partner Card */}
-          <Reveal delay={120} className="h-full">
-            <article className="h-full flex flex-col justify-between rounded-3xl border border-white/10 bg-[#021329] p-7 sm:p-8 text-white shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 -mr-16 -mt-16 size-48 rounded-full bg-[#B98F32]/15 blur-2xl pointer-events-none" />
-
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-[#dcc17b] ring-1 ring-white/15">
-                  <Sparkles className="size-3" />
-                  <span>Join the Mentor Council</span>
-                </div>
-
-                <h3 className="mt-5 text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-                  Share Your Expertise with Ambitious Founders
-                </h3>
-
-                <p className="mt-4 text-sm leading-relaxed text-white/80 font-normal">
-                  Give back to the entrepreneurial ecosystem. Advise curated startups, conduct masterclasses, and build
-                  strategic ventures alongside Yasir Ali.
-                </p>
-
-                <div className="mt-6 space-y-2 text-xs text-white/70">
-                  <p>• Lead exclusive business masterclasses</p>
-                  <p>• Mentor selected Mission 100 founders</p>
-                  <p>• Co-venture and expansion partnership access</p>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-white/10">
-                <Pill to="/contact?topic=Mentor+%2F+partner#form" variant="gold" className="self-start">
-                  Apply as a Mentor
-                </Pill>
-              </div>
-            </article>
-          </Reveal>
-        </div>
-      </Container>
     </section>
   )
 }

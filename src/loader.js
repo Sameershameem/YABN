@@ -1,7 +1,7 @@
 // Lifts the inline loader from index.html once the page is ready to be seen.
 // Waits for the hero photo (when the page has one), but never less than MIN_MS
 // so the reveal feels intentional, and never more than MAX_MS so a slow network can't trap visitors.
-const MIN_MS = 1500
+const MIN_MS = 1200
 const MAX_MS = 4000
 
 export function dismissLoader() {

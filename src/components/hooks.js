@@ -73,3 +73,85 @@ export function useScrollLock(locked) {
     }
   }, [locked])
 }
+
+/* ---------- Scroll-linked motion ----------
+   One passive scroll listener and one rAF per frame drive every scroll animation.
+   Only elements near the viewport are measured, and all rects are read before any
+   callback writes styles, so the browser never has to lay out twice in a frame. */
+const scrollSubs = new Set()
+let ticking = false
+let scrollIO = null
+
+function runFrame() {
+  ticking = false
+  const vh = window.innerHeight
+  const reads = []
+  for (const s of scrollSubs) if (s.active) reads.push([s, s.el.getBoundingClientRect()])
+  for (const [s, rect] of reads) s.cb.current(rect, vh)
+}
+
+function requestFrame() {
+  if (ticking) return
+  ticking = true
+  requestAnimationFrame(runFrame)
+}
+
+function getScrollIO() {
+  if (scrollIO || typeof IntersectionObserver === 'undefined') return scrollIO
+  scrollIO = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        for (const s of scrollSubs) if (s.el === e.target) s.active = e.isIntersecting
+      }
+      requestFrame()
+    },
+    { rootMargin: '25% 0px 25% 0px' },
+  )
+  return scrollIO
+}
+
+/* Calls cb(rect, viewportHeight) on every frame the element is near the viewport */
+export function useScrollFrame(ref, cb) {
+  const cbRef = useRef(cb)
+  useEffect(() => {
+    cbRef.current = cb
+  })
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const sub = { el, cb: cbRef, active: true }
+    if (!scrollSubs.size) {
+      window.addEventListener('scroll', requestFrame, { passive: true })
+      window.addEventListener('resize', requestFrame, { passive: true })
+    }
+    scrollSubs.add(sub)
+    getScrollIO()?.observe(el)
+    requestFrame()
+    return () => {
+      scrollIO?.unobserve(el)
+      scrollSubs.delete(sub)
+      if (!scrollSubs.size) {
+        window.removeEventListener('scroll', requestFrame)
+        window.removeEventListener('resize', requestFrame)
+      }
+    }
+  }, [ref])
+}
+
+export const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
+
+/* 0 when a tall section's top reaches the viewport top, 1 when its bottom reaches the viewport bottom */
+export const stickyProgress = (rect, vh) => clamp01(-rect.top / Math.max(1, rect.height - vh))
+
+/* Live boolean for a media query, e.g. useMedia('(min-width: 1024px)') */
+export function useMedia(query) {
+  const [match, setMatch] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches)
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    const on = () => setMatch(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [query])
+  return match
+}

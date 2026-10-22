@@ -121,8 +121,8 @@ export function UnderLink({ to, children, light = false }) {
 
 /* Responsive photo helper supporting webp and generated jpg assets */
 export function Photo({ name, alt = '', className = '', eager = false }) {
-  // Check if name is one of the custom generated luxury photos
-  const isJpg = name.startsWith('yabn-') || name === 'hero-mountain'
+  // every photo ships as 800/1600 webp except the original mountain jpg
+  const isJpg = name === 'hero-mountain'
   const src = isJpg ? `/img/${name}.jpg` : `/img/${name}-800.webp`
   const srcSet = isJpg ? undefined : `/img/${name}-800.webp 800w, /img/${name}-1600.webp 1600w`
 
@@ -136,5 +136,100 @@ export function Photo({ name, alt = '', className = '', eager = false }) {
       decoding="async"
       className={`h-full w-full object-cover ${className}`}
     />
+  )
+}
+
+/* Text that types itself in, character by character, once it scrolls into view.
+   Wrap a phrase in [brackets] to set it as the gold serif accent: "The YABN [Method]".
+   Pass `play` to control the timing yourself instead of using the scroll trigger. */
+export function TypeReveal({ text, play, light = false, as: Tag = 'span', className = '', step = 22, delay = 0 }) {
+  const [ref, inView] = useInView()
+  const on = play ?? inView
+  const plain = text.replace(/[[\]]/g, '')
+  let i = 0
+  const word = (w, key) => (
+    <span key={key} className="inline-block whitespace-nowrap">
+      {[...w].map((c, k) => (
+        <span key={k} className="type-char" style={{ '--i': i++ }}>
+          {c}
+        </span>
+      ))}
+    </span>
+  )
+  const words = (s, keyBase) =>
+    s.split(/(\s+)/).map((w, k) => (/^\s+$/.test(w) ? (i++, ' ') : w && word(w, `${keyBase}-${k}`)))
+
+  return (
+    <Tag
+      ref={ref}
+      className={`${on ? 'is-typed' : ''} ${className}`}
+      style={{ '--step': `${step}ms`, '--d': `${delay}ms` }}
+    >
+      <span className="sr-only">{plain}</span>
+      <span aria-hidden="true">
+        {text.split(/(\[[^\]]+\])/).map((part, k) =>
+          part.startsWith('[') ? (
+            <span key={k} className="whitespace-nowrap">
+              <span className={`font-light ${light ? 'text-white/45' : 'text-[#dcc17b]'}`}>[</span>
+              <span className={`font-serif text-[1.06em] font-normal italic ${light ? 'text-[#e6cf94]' : 'text-[#96711e]'}`}>
+                {words(part.slice(1, -1), k)}
+              </span>
+              <span className={`font-light ${light ? 'text-white/45' : 'text-[#dcc17b]'}`}>]</span>
+            </span>
+          ) : (
+            words(part, k)
+          ),
+        )}
+      </span>
+    </Tag>
+  )
+}
+
+/* Numbered section title in the reference layout: a big index, then the typed heading */
+export function SectionHead({ n, title, aside, className = '' }) {
+  return (
+    <div className={`grid grid-cols-[2.75rem_1fr] items-baseline gap-x-3 sm:grid-cols-[5rem_1fr] lg:grid-cols-[1fr_3fr] ${className}`}>
+      <span className="text-[clamp(1.4rem,2.6vw,2.4rem)] font-medium tracking-tight text-[#021329] tabular-nums">
+        {String(n).padStart(2, '0')}
+      </span>
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+        <TypeReveal
+          as="h2"
+          text={title}
+          className="text-[clamp(2rem,4.4vw,3.6rem)] leading-[1.04] font-medium tracking-[-0.035em] text-[#021329]"
+        />
+        {aside && <p className="max-w-xs shrink-0 font-mono text-[12px] leading-relaxed text-slate-500">{aside}</p>}
+      </div>
+    </div>
+  )
+}
+
+/* Small navy button in the reference's monospace style */
+export function MonoButton({ to, href, children, onClick, variant = 'navy', className = '' }) {
+  const cls = `group inline-flex items-center gap-2 rounded-md px-4 py-2.5 font-mono text-[11px] tracking-wide uppercase transition-colors ${
+    variant === 'navy' ? 'bg-[#021329] text-white hover:bg-[#0b2a52]' : 'bg-[#f5ecd7] text-[#7a5a14] hover:bg-[#efe0bd]'
+  } ${className}`
+  const inner = (
+    <>
+      {children}
+      <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+    </>
+  )
+  if (to)
+    return (
+      <Link to={to} className={cls}>
+        {inner}
+      </Link>
+    )
+  if (href)
+    return (
+      <a href={href} className={cls}>
+        {inner}
+      </a>
+    )
+  return (
+    <button type="button" onClick={onClick} className={cls}>
+      {inner}
+    </button>
   )
 }
